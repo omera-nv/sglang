@@ -10,8 +10,8 @@ from sglang.srt.configs.mamba_utils import (
 )
 from sglang.srt.distributed import (
     divide,
-    get_tensor_model_parallel_rank,
-    get_tensor_model_parallel_world_size,
+    get_attn_tensor_model_parallel_rank,
+    get_attn_tensor_model_parallel_world_size,
 )
 from sglang.srt.layers.attention.mamba.mamba2_metadata import Mamba2Metadata
 from sglang.srt.layers.attention.mamba.mixer2_rms_norm_gated import Mixer2RMSNormGated
@@ -209,8 +209,8 @@ class MambaMixer2(torch.nn.Module):
         #   may be replicated to follow the head shard.
         # - NOTE: currently for the world size DOES NOT divide groups
         #   case, we only support the case when n_groups == 1
-        self.tp_size = get_tensor_model_parallel_world_size()
-        self.tp_rank = get_tensor_model_parallel_rank()
+        self.tp_size = get_attn_tensor_model_parallel_world_size()
+        self.tp_rank = get_attn_tensor_model_parallel_rank()
 
         self.num_heads = num_heads = cache_params.shape.num_heads
         self.head_dim = cache_params.shape.head_dim
