@@ -1127,6 +1127,14 @@ class FlashInferIndicesUpdaterDecode:
         disable_split_kv: Optional[bool] = None,
     ):
         if spec_info is None:
+            import os
+
+            if os.getenv("RANK", "0") == "0":
+                print(
+                    f"[fi-bg] len(req_pool_indices)={len(req_pool_indices)} "
+                    f"paged_kernel_lens.shape={paged_kernel_lens.shape}",
+                    flush=True,
+                )
             bs = len(req_pool_indices)
             kv_indptr[1 : bs + 1] = torch.cumsum(paged_kernel_lens, dim=0)
             kv_indptr = kv_indptr[: bs + 1]

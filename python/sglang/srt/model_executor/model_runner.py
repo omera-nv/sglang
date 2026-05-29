@@ -2682,6 +2682,15 @@ class ModelRunner(ModelRunnerKVCacheMixin):
         if lora_ids is not None:
             self.lora_manager.prepare_lora_batch(forward_batch)
 
+        import os
+
+        if os.getenv("RANK", "0") == "0":
+            print(
+                f"[_dummy_run] batch_size={batch_size} num_tokens={num_tokens} "
+                f"buffers.req_pool_indices.shape={buffers.req_pool_indices.shape} "
+                f"buffers.seq_lens.shape={buffers.seq_lens.shape}",
+                flush=True,
+            )
         self.attn_backend.init_forward_metadata(forward_batch)
 
         def run_once():

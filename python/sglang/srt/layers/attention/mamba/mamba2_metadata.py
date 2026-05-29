@@ -213,6 +213,13 @@ class Mamba2Metadata(ForwardMetadata):
         prep_initial_states = torch.any(has_initial_states[:num_prefills]).item()
 
         query_start_loc = forward_metadata.query_start_loc[: num_prefills + 1]
+        print(
+            f"[mamba2 prepare_mixed rank={torch.distributed.get_rank() if torch.distributed.is_initialized() else '?'}] "
+            f"num_prefills={num_prefills} num_prefill_tokens={num_prefill_tokens} "
+            f"query_start_loc={query_start_loc.tolist()} "
+            f"diffs={query_start_loc.diff().tolist()} "
+            f"diff_sum={query_start_loc.diff().sum().item()}",
+        )
         seq_idx = torch.repeat_interleave(
             torch.arange(
                 num_prefills, dtype=torch.int32, device=query_start_loc.device
