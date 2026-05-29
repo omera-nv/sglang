@@ -259,6 +259,8 @@ class MambaMixer2(torch.nn.Module):
                 bias=use_conv_bias,
                 quant_config=None,
                 prefix=f"{prefix}.conv1d",
+                tp_size=self.tp_size,
+                tp_rank=self.tp_rank,
             )
 
             self.in_proj = MergedColumnParallelLinear(
@@ -273,6 +275,8 @@ class MambaMixer2(torch.nn.Module):
                 bias=use_bias,
                 quant_config=quant_config,
                 prefix=f"{prefix}.in_proj",
+                tp_size=self.tp_size,
+                tp_rank=self.tp_rank,
             )
         else:
             # This is the n_groups == 1 case,
@@ -284,6 +288,8 @@ class MambaMixer2(torch.nn.Module):
                 bias=use_conv_bias,
                 quant_config=None,
                 prefix=f"{prefix}.conv1d",
+                tp_size=self.tp_size,
+                tp_rank=self.tp_rank,
             )
 
             self.in_proj = ColumnParallelLinear(
@@ -292,6 +298,8 @@ class MambaMixer2(torch.nn.Module):
                 bias=use_bias,
                 quant_config=quant_config,
                 prefix=f"{prefix}.in_proj",
+                tp_size=self.tp_size,
+                tp_rank=self.tp_rank,
             )
 
             # - because in_proj is a concatenation of 3 weights, we
